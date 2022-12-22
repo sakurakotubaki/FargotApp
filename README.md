@@ -6,7 +6,7 @@
     - Version2はgo_router: ^5.2.4で画面遷移する
     - go_router6.0.0は不具合あるそうなので使用しませんでした
   
-パスワードをリセットするコード
+パスワードをリセットするコード<br>
 onChangeで取得した値を引数に入れる
 ```dart
 ElevatedButton(
@@ -22,7 +22,8 @@ onPressed: () async {
 }),
 ```
 
-FlutterFireのドキュメントのコード
+FlutterFireのドキュメントのコード<br>
+登録したメールアドレスにリセットのリクエストを送る
 ```dart
 await FirebaseAuth.instance
     .sendPasswordResetEmail(email: "user@example.com");
