@@ -1,9 +1,10 @@
 import 'package:fargot_password/fargot_password.dart';
-import 'package:fargot_password/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
+import 'home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,18 +14,44 @@ void main() async {
   runApp(const MyApp());
 }
 
+/// GoRouterの画面遷移の設定
+final GoRouter _router = GoRouter(
+  routes: <GoRoute>[
+    /// 最初のページのページへ移動する設定
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) =>
+          const MyHomePage(),
+      routes: <GoRoute>[
+        /// ログイン後のページへ画面遷移する設定
+        GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) => HomePage(),
+        ),
+
+        /// パスワードをリセットするページへ画面遷移する設定
+        GoRoute(
+          path: 'fargot',
+          builder: (BuildContext context, GoRouterState state) =>
+              const FargotPassword(),
+        ),
+      ],
+    ),
+  ],
+);
+
 // MyAppのクラス
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: _router,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -91,15 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             .signInWithEmailAndPassword(
                                 email: _email, password: _password))
                         .user;
-                    if (user != null)
-                      print("ログインしました　${user.email} , ${user.uid}");
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return HomePage(); // 遷移先の画面widgetを指定
-                        },
-                      ),
-                    );
+                    if (user != null) context.go('/home');
                   } catch (e) {
                     print(e);
                   }
@@ -107,13 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return FargotPassword(); // 遷移先の画面widgetを指定
-                        },
-                      ),
-                    );
+                    context.go('/fargot');
                   },
                   child: Text('パスワードを忘れた'))
             ],
