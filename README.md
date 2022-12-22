@@ -1,16 +1,31 @@
-# fargot_password
+# パスワードリセットのDemoアプリ
 
-A new Flutter project.
+- アプリの用件
+  - FirebaseAuthenticationで認証機能のDemoアプリを作成
+    - Version1は通常の画面遷移する
+    - Version2はgo_router: ^5.2.4で画面遷移する
+    - go_router6.0.0は不具合あるそうなので使用しませんでした
+  
+パスワードをリセットするコード
+onChangeで取得した値を引数に入れる
+```dart
+ElevatedButton(
+child: const Text('パスワードリセットする'),
+onPressed: () async {
+  try {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: _email);
+    print("パスワードリセット用のメールを送信しました");
+  } catch (e) {
+    print(e);
+  }
+}),
+```
 
-## Getting Started
+FlutterFireのドキュメントのコード
+```dart
+await FirebaseAuth.instance
+    .sendPasswordResetEmail(email: "user@example.com");
+```
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[FlutterFireの認証機能関係のリンク](https://firebase.flutter.dev/docs/auth/manage-users)
